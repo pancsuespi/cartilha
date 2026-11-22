@@ -1317,19 +1317,144 @@
       document.documentElement.style.setProperty('--base-font', currentFontSize + 'px');
     }
 
-    // ============== OUVIR PÁGINA (WEB SPEECH API) ==============
+    // ============== OUVIR PÁGINA (VERSÃO MELHORADA) ==============
     let isSpeaking = false;
+    let speechSessionId = 0;
+    let currentUtterance = null;
+    let preferredVoice = null;
+
+    function loadPreferredVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || !voices.length) return;
+
+      const ptBR = voices.filter(v =>
+        v.lang && v.lang.toLowerCase().replace('_', '-') === 'pt-br'
+      );
+
+      preferredVoice =
+        ptBR.find(v => /google|microsoft|francisca|antonio|luciana|maria|natural|neural/i.test(v.name)) ||
+        ptBR[0] ||
+        voices.find(v => v.lang && v.lang.toLowerCase().startsWith('pt')) ||
+        null;
+    }
+
+    if ('speechSynthesis' in window) {
+      loadPreferredVoice();
+      window.speechSynthesis.onvoiceschanged = loadPreferredVoice;
+      window.addEventListener('beforeunload', () => stopSpeech());
+    }
+
+    function cleanTextForSpeech(text) {
+      return text
+        .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]/gu, '')
+        .replace(/[•—–|~▶⬅➡]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function extractPageChunks(pageElement) {
+      const clone = pageElement.cloneNode(true);
+
+      // Remove elementos que não devem ser lidos em voz alta
+      clone.querySelectorAll(
+        'button, select, input, label, script, style, .img-fallback, .no-print, .calc-panel:not(.active), .video-icon'
+      ).forEach(el => el.remove());
+
+      const blocks = clone.querySelectorAll(
+        'h1, h2, h3, h4, p, li, figcaption, .badge, .glossary-term, .glossary-item > div:last-child, .quiz-question, .quiz-score-box, .credits-box'
+      );
+
+      const rawSentences = [];
+      const seen = new Set();
+
+      blocks.forEach(el => {
+        // Evita ler o container pai se ele contém outros blocos já selecionados
+        if (el.classList.contains('credits-box') && el.querySelector('p, h3')) return;
+
+        let txt = cleanTextForSpeech(el.textContent || '');
+        if (!txt || seen.has(txt)) return;
+        seen.add(txt);
+
+        // Garante pausa natural no final de títulos e itens
+        if (!/[.!?:;]$/.test(txt)) txt += '.';
+        rawSentences.push(txt);
+      });
+
+      // Divide frases longas em blocos curtos (~190 caracteres) para evitar travamento no navegador
+      const chunks = [];
+      rawSentences.forEach(sentence => {
+        const parts = sentence.match(/[^.!?]+[.!?]+/g) || [sentence];
+        parts.forEach(part => {
+          const cleanPart = part.trim();
+          if (!cleanPart) return;
+          if (cleanPart.length <= 190) {
+            chunks.push(cleanPart);
+          } else {
+            const subParts = cleanPart.split(/,\s*/);
+            let buffer = '';
+            subParts.forEach(sp => {
+              if ((buffer + ', ' + sp).length > 190 && buffer) {
+                chunks.push(buffer.trim());
+                buffer = sp;
+              } else {
+                buffer = buffer ? buffer + ', ' + sp : sp;
+              }
+            });
+            if (buffer) chunks.push(buffer.trim());
+          }
+        });
+      });
+
+      return chunks;
+    }
+
+    function updateSpeechButton(active) {
+      const btn = document.getElementById('btnSpeech');
+      if (!btn) return;
+      btn.classList.toggle('active-speech', active);
+      btn.textContent = active ? '⏹️ Parar áudio' : '🔊 Ouvir página';
+    }
 
     function stopSpeech() {
+      speechSessionId++;
+      isSpeaking = false;
+      currentUtterance = null;
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
-      isSpeaking = false;
-      const btn = document.getElementById('btnSpeech');
-      if (btn) {
-        btn.classList.remove('active-speech');
-        btn.textContent = '🔊 Ouvir página';
+      updateSpeechButton(false);
+    }
+
+    function speakChunks(chunks, index, sessionId) {
+      if (sessionId !== speechSessionId || !isSpeaking) return;
+      if (index >= chunks.length) {
+        stopSpeech();
+        return;
       }
+
+      const utterance = new SpeechSynthesisUtterance(chunks[index]);
+      utterance.lang = 'pt-BR';
+      utterance.rate = 0.96;
+      utterance.pitch = 1.0;
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      currentUtterance = utterance;
+
+      utterance.onend = () => {
+        if (sessionId !== speechSessionId) return;
+        speakChunks(chunks, index + 1, sessionId);
+      };
+
+      utterance.onerror = () => {
+        if (sessionId !== speechSessionId) return;
+        stopSpeech();
+      };
+
+      window.speechSynthesis.speak(utterance);
     }
 
     function toggleSpeech() {
@@ -1343,23 +1468,23 @@
         return;
       }
 
-      const activePage = pages[currentPage];
-      const textToRead = activePage.innerText.replace(/\s+/g, ' ').trim();
+      loadPreferredVoice();
+      const chunks = extractPageChunks(pages[currentPage]);
+      if (!chunks.length) return;
 
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.lang = 'pt-BR';
-      utterance.rate = 0.95;
-
-      utterance.onend = () => stopSpeech();
-      utterance.onerror = () => stopSpeech();
-
+      // Limpa qualquer fila antiga antes de iniciar a nova leitura
       window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-
+      speechSessionId++;
+      const mySession = speechSessionId;
       isSpeaking = true;
-      const btn = document.getElementById('btnSpeech');
-      btn.classList.add('active-speech');
-      btn.textContent = '⏹️ Parar áudio';
+      updateSpeechButton(true);
+
+      // Pequena pausa (120ms) após cancel() evita conflito de áudio ao trocar de página
+      setTimeout(() => {
+        if (mySession === speechSessionId && isSpeaking) {
+          speakChunks(chunks, 0, mySession);
+        }
+      }, 120);
     }
 
     // ============== COMPARTILHAR NO WHATSAPP ==============
