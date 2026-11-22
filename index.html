@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartilha Interativa de PANCs — UESPI / PREX</title>
+  <meta name="description" content="Cartilha digital acessível sobre Plantas Alimentícias Não Convencionais (PANCs): Chanana, Ora-pro-nóbis e Vinagreira para agricultores familiares do Piauí.">
+  <style>
+    :root {
+      --bg-page: #faf7f0;
+      --bg-card: #ffffff;
+      --verde-escuro: #1e4d2b;
+      --verde-medio: #2f6f3e;
+      --verde-claro: #e7f3ea;
+      --terra: #9c4a1a;
+      --terra-claro: #fdf0e6;
+      --amarelo-suave: #fff8db;
+      --amarelo-borda: #d99b00;
+      --alerta-bg: #fff3cd;
+      --alerta-borda: #b85d00;
+      --texto: #1c241e;
+      --texto-suave: #455248;
+      --borda: #d6d0c4;
+      --sombra: 0 4px 14px rgba(30, 77, 43, 0.08);
+      --base-font: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: var(--base-font);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--texto);
+      line-height: 1.65;
+    }
+
+    /* Barra superior fixa de acessibilidade e utilidades */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--verde-escuro);
+      color: #ffffff;
+      padding: 0.6rem 0.8rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+
+    .top-bar-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .brand-mini {
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tools-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .tool-btn {
+      background-color: #ffffff;
+      color: var(--verde-escuro);
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      padding: 0.42rem 0.68rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: transform 0.1s ease, background-color 0.2s ease;
+    }
+
+    .tool-btn:hover, .tool-btn:focus {
+      background-color: var(--amarelo-suave);
+      outline: 2px solid #ffd54f;
+    }
+
+    .tool-btn.active-speech {
+      background-color: #ffd54f;
+      color: #1c241e;
+      border-color: #ffd54f;
+    }
+
+    .tool-btn.whatsapp-btn {
+      background-color: #1f8b4c;
+      color: #ffffff;
+      border-color: #a3e4bd;
+    }
+
+    .tool-btn.whatsapp-btn:hover {
+      background-color: #166c3a;
+    }
+
+    /* Barra de progresso e menu rápido */
+    .nav-strip {
+      max-width: 860px;
+      margin: 0.9rem auto 0;
+      padding: 0 0.8rem;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--verde-escuro);
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 12px;
+      background-color: #ded8cb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 9%;
+      background-color: var(--verde-medio);
+      transition: width 0.25s ease;
+    }
+
+    .quick-menu-select {
+      width: 100%;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--texto);
+      background-color: #ffffff;
+      border: 2px solid var(--verde-medio);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* Container principal da cartilha */
+    .booklet-container {
+      max-width: 860px;
+      margin: 1rem auto 2rem;
+      padding: 0 0.8rem;
+    }
+
+    .page {
+      display: none;
+      background-color: var(--bg-card);
+      border: 2px solid var(--borda);
+      border-radius: 16px;
+      padding: 1.5rem 1.3rem;
+      box-shadow: var(--sombra);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tipografia */
+    h1 {
+      font-size: 1.7rem;
+      line-height: 1.25;
+      color: var(--verde-escuro);
+      margin: 0 0 0.8rem;
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      line-height: 1.3;
+      color: var(--verde-escuro);
+      margin: 0 0 0.8rem;
+      border-bottom: 3px solid var(--verde-claro);
+      padding-bottom: 0.4rem;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      color: var(--terra);
+      margin: 1.2rem 0 0.5rem;
+    }
+
+    p {
+      margin: 0 0 0.9rem;
+    }
+
+    ul, ol {
+      padding-left: 1.3rem;
+      margin: 0 0 1rem;
+    }
+
+    li {
+      margin-bottom: 0.45rem;
+    }
+
+    /* Caixas temáticas */
+    .cover-banner {
+      background: linear-gradient(135deg, var(--verde-escuro), var(--verde-medio));
+      color: #ffffff;
+      padding: 1.6rem 1.3rem;
+      border-radius: 14px;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+
+    .cover-banner h1 {
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .cover-subtitle {
+      font-size: 1.05rem;
+      color: #eef8f0;
+      margin-bottom: 0.8rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-top: 0.8rem;
+    }
+
+    .badge {
+      background-color: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.45);
+      color: #ffffff;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .info-box {
+      background-color: var(--verde-claro);
+      border-left: 6px solid var(--verde-medio);
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+
+    .terra-box {
+      background-color: var(--terra-claro);
+      border-left: 6px solid var(--terra);
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+
+    .safety-box {
+      background-color: var(--alerta-bg);
+      border: 2px solid var(--alerta-borda);
+      border-left: 8px solid var(--alerta-borda);
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1.2rem 0;
+    }
+
+    .safety-box h3 {
+      color: #7c3d00;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .credits-box {
+      background-color: #f4f1ea;
+      border: 2px solid var(--borda);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1.2rem;
+      font-size: 0.92rem;
+    }
+
+    /* Fotos de campo */
+    .photo-figure {
+      margin: 1rem 0;
+      background-color: #f7f4ec;
+      border: 2px solid var(--borda);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .photo-figure img {
+      display: block;
+      width: 100%;
+      max-height: 430px;
+      object-fit: cover;
+      background-color: #e9e4d9;
+    }
+
+    .photo-figure figcaption {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.88rem;
+      color: var(--texto-suave);
+      font-weight: 600;
+      background-color: #f7f4ec;
+    }
+
+    .img-fallback {
+      padding: 1.5rem 1rem;
+      color: var(--terra);
+      font-weight: 700;
+      display: none;
+    }
+
+    /* Cards de características e receitas */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+      margin: 1rem 0;
+    }
+
+    @media (min-width: 680px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .page {
+        padding: 2rem 2.2rem;
+      }
+    }
+
+    .mini-card {
+      background-color: #fcfbf8;
+      border: 2px solid var(--borda);
+      border-radius: 12px;
+      padding: 0.95rem;
+    }
+
+    .mini-card h4 {
+      margin: 0 0 0.4rem;
+      color: var(--verde-escuro);
+      font-size: 1.05rem;
+    }
+
+    .recipe-card {
+      border: 2px solid var(--verde-medio);
+      border-radius: 14px;
+      padding: 1.15rem;
+      margin: 1.2rem 0;
+      background-color: #ffffff;
+    }
+
+    .recipe-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+      border-bottom: 2px dashed var(--borda);
+      padding-bottom: 0.5rem;
+    }
+
+    .recipe-header h3 {
+      margin: 0;
+      color: var(--verde-escuro);
+      font-size: 1.2rem;
+    }
+
+    .recipe-tag {
+      background-color: var(--terra-claro);
+      color: var(--terra);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid #e6b89c;
+    }
+
+    /* Cartão de Vídeo YouTube */
+    .video-card {
+      background: linear-gradient(180deg, #fff8f5 0%, #ffffff 100%);
+      border: 3px solid #c4302b;
+      border-radius: 16px;
+      padding: 1.5rem 1.2rem;
+      text-align: center;
+      margin: 1.2rem 0;
+    }
+
+    .video-icon {
+      font-size: 3.2rem;
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+
+    .yt-btn {
+      display: inline-block;
+      background-color: #c4302b;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 0.95rem 1.6rem;
+      border-radius: 12px;
+      margin-top: 0.8rem;
+      box-shadow: 0 4px 10px rgba(196, 48, 43, 0.28);
+    }
+
+    .yt-btn:hover, .yt-btn:focus {
+      background-color: #9e221e;
+    }
+
+    /* Quiz */
+    .quiz-item {
+      border: 2px solid var(--borda);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: #fcfbf8;
+    }
+
+    .quiz-question {
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      color: var(--verde-escuro);
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quiz-btn {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 2px solid var(--borda);
+      border-radius: 10px;
+      background-color: #ffffff;
+      color: var(--texto);
+      cursor: pointer;
+    }
+
+    .quiz-btn:hover {
+      border-color: var(--verde-medio);
+      background-color: var(--verde-claro);
+    }
+
+    .quiz-btn.correct {
+      background-color: #d4edda;
+      border-color: #1e7e34;
+      color: #155724;
+    }
+
+    .quiz-btn.wrong {
+      background-color: #f8d7da;
+      border-color: #bd2130;
+      color: #721c24;
+    }
+
+    .quiz-feedback {
+      margin-top: 0.6rem;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .quiz-score-box {
+      background-color: var(--verde-claro);
+      border: 2px solid var(--verde-medio);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+
+    /* Calculadoras */
+    .calc-tabs {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .calc-tab-btn {
+      flex: 1;
+      min-width: 180px;
+      padding: 0.8rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border: 2px solid var(--verde-medio);
+      border-radius: 10px;
+      background-color: #ffffff;
+      color: var(--verde-escuro);
+      cursor: pointer;
+    }
+
+    .calc-tab-btn.active {
+      background-color: var(--verde-escuro);
+      color: #ffffff;
+    }
+
+    .calc-panel {
+      display: none;
+      border: 2px solid var(--borda);
+      border-radius: 14px;
+      padding: 1.1rem;
+      background-color: #fcfbf8;
+    }
+
+    .calc-panel.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 0.9rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--verde-escuro);
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 2px solid var(--borda);
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: var(--texto);
+    }
+
+    .calc-result {
+      background-color: var(--verde-claro);
+      border: 2px solid var(--verde-medio);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .calc-result p {
+      margin-bottom: 0.45rem;
+    }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      background-color: #ffffff;
+    }
+
+    .price-table th, .price-table td {
+      border: 1px solid var(--borda);
+      padding: 0.6rem;
+      text-align: left;
+    }
+
+    .price-table th {
+      background-color: var(--verde-escuro);
+      color: #ffffff;
+    }
+
+    /* Glossário */
+    .glossary-item {
+      border-bottom: 1px solid var(--borda);
+      padding: 0.75rem 0;
+    }
+
+    .glossary-item:last-child {
+      border-bottom: none;
+    }
+
+    .glossary-term {
+      font-weight: 800;
+      color: var(--terra);
+      font-size: 1.05rem;
+    }
+
+    /* Botões grandes de passar páginas */
+    .pager-controls {
+      max-width: 860px;
+      margin: 0 auto 2.5rem;
+      padding: 0 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .pager-btn {
+      flex: 1;
+      padding: 0.95rem 1rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .pager-btn.prev {
+      background-color: #e6dfd3;
+      color: var(--texto);
+      border: 2px solid #bfb6a6;
+    }
+
+    .pager-btn.next {
+      background-color: var(--verde-escuro);
+      color: #ffffff;
+    }
+
+    .pager-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Estilo limpo para Impressão / Salvar em PDF */
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+        font-size: 12pt;
+      }
+      .top-bar, .nav-strip, .pager-controls, .calc-tabs, .quiz-btn, .yt-btn, .no-print {
+        display: none !important;
+      }
+      .booklet-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .page {
+        display: block !important;
+        border: none;
+        box-shadow: none;
+        page-break-after: always;
+        padding: 0.5cm 0;
+      }
+      .page:last-child {
+        page-break-after: auto;
+      }
+      .calc-panel {
+        display: block !important;
+        margin-bottom: 1rem;
+      }
+      .cover-banner {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 2px solid #1e4d2b;
+      }
+      .cover-banner h1, .cover-subtitle, .badge {
+        color: #000000 !important;
+        border-color: #1e4d2b !important;
+      }
+      .photo-figure img {
+        max-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de acessibilidade fixa -->
+  <header class="top-bar" role="banner">
+    <div class="top-bar-inner">
+      <div class="brand-mini">🌱 Cartilha PANCs • UESPI</div>
+      <div class="tools-group">
+        <button type="button" class="tool-btn" id="btnSpeech" onclick="toggleSpeech()" aria-label="Ouvir esta página">
+          🔊 Ouvir página
+        </button>
+        <button type="button" class="tool-btn" onclick="changeFontSize(2)" aria-label="Aumentar tamanho da letra">
+          A+
+        </button>
+        <button type="button" class="tool-btn" onclick="changeFontSize(-2)" aria-label="Diminuir tamanho da letra">
+          A-
+        </button>
+        <button type="button" class="tool-btn" onclick="window.print()" aria-label="Imprimir ou salvar em PDF">
+          🖨️ PDF
+        </button>
+        <button type="button" class="tool-btn whatsapp-btn" onclick="shareWhatsApp()" aria-label="Compartilhar no WhatsApp">
+          📲 WhatsApp
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progresso e Menu Rápido -->
+  <nav class="nav-strip" aria-label="Navegação da cartilha">
+    <div class="progress-wrap">
+      <span id="pageIndicator">Página 1 de 11</span>
+      <div class="progress-bar-bg" aria-hidden="true">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <label for="quickMenu" style="position:absolute;left:-9999px;">Ir para uma página específica</label>
+    <select id="quickMenu" class="quick-menu-select" onchange="goToPage(Number(this.value))">
+      <option value="0">1. Capa e Apresentação do Projeto</option>
+      <option value="1">2. O que são PANCs e o Nosso Bioma</option>
+      <option value="2">3. Ficha da Planta: Chanana (Flor-do-guarujá)</option>
+      <option value="3">4. Ficha da Planta: Ora-pro-nóbis</option>
+      <option value="4">5. Ficha da Planta: Vinagreira</option>
+      <option value="5">6. Receitas Fáceis (Parte 1): Chanana e Vinagreira</option>
+      <option value="6">7. Receitas Fáceis (Parte 2): Ora-pro-nóbis</option>
+      <option value="7">8. Vídeo Educativo do Projeto (YouTube)</option>
+      <option value="8">9. Quiz: Teste o que você aprendeu</option>
+      <option value="9">10. Calculadoras: Receitas e Preço de Venda</option>
+      <option value="10">11. Glossário Simples e Créditos</option>
+    </select>
+  </nav>
+
+  <!-- Conteúdo das páginas -->
+  <main class="booklet-container" id="bookletMain">
+
+    <!-- PÁGINA 1: CAPA E APRESENTAÇÃO -->
+    <section class="page active" data-title="Capa e Apresentação">
+      <div class="cover-banner">
+        <p style="font-weight:700; margin-bottom:0.4rem; font-size:0.9rem;">UNIVERSIDADE ESTADUAL DO PIAUÍ (UESPI) • PREX</p>
+        <h1>Plantas Alimentícias Não Convencionais (PANCs)</h1>
+        <p class="cover-subtitle">Saberes Tradicionais, Sustentabilidade e Inovação na Agricultura Familiar</p>
+        <div class="badge-row">
+          <span class="badge">📍 Floriano</span>
+          <span class="badge">📍 Tanque do Piauí</span>
+          <span class="badge">📍 Nazaré do Piauí</span>
+          <span class="badge">📍 Guadalupe</span>
+        </div>
+      </div>
+
+      <h2>Bem-vindo(a) à nossa Cartilha Digital!</h2>
+      <p>Esta cartilha foi feita especialmente para <strong>agricultores familiares e produtores de hortas comunitárias</strong> dos municípios de <strong>Floriano, Tanque do Piauí, Nazaré do Piauí e Guadalupe</strong>, no Piauí.</p>
+      <p>Ela nasceu das visitas de campo do nosso Programa de Extensão da UESPI. Aqui, reunimos o que encontramos na prática dentro das hortas: <strong>três plantas fortes, nutritivas e fáceis de achar</strong> que podem melhorar a comida na mesa e gerar <strong>renda extra</strong> para as famílias.</p>
+
+      <div class="info-box">
+        <strong>💡 Como usar esta cartilha no celular:</strong>
+        <ul>
+          <li>Use os botões grandes no final da tela para <strong>Voltar</strong> ou ir para a <strong>Próxima Página</strong>.</li>
+          <li>Se preferir não ler, toque em <strong>🔊 Ouvir página</strong> lá em cima para escutar o texto.</li>
+          <li>Toque em <strong>A+</strong> para deixar as letras maiores.</li>
+        </ul>
+      </div>
+
+      <div class="credits-box">
+        <strong>🏛️ Realização Institucional:</strong><br>
+        Universidade Estadual do Piauí (UESPI) — Pró-Reitoria de Extensão, Assuntos Estudantis e Comunitários (PREX) — Campus Dra. Josefina Demes.<br>
+        <strong>Coordenação Geral:</strong> Prof. Dr. Daniel César Menêses de Carvalho.<br>
+        <strong>Colaboração:</strong> Leydiane Gleici Oliveira Medeiros.
+      </div>
+    </section>
+
+    <!-- PÁGINA 2: O QUE SÃO PANCS E BIOMA -->
+    <section class="page" data-title="O que são PANCs e o Nosso Bioma">
+      <h2>🌿 O que são PANCs?</h2>
+      <p><strong>PANC</strong> significa <strong>Planta Alimentícia Não Convencional</strong>.</p>
+      <p>São plantas que a gente pode comer e que fazem muito bem à saúde, mas que quase não aparecem nos supermercados. Muitas delas nascem sozinhas perto das hortas, quintais e cercas — e às vezes são chamadas de "mato", mesmo sendo um alimento rico!</p>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>💪 Mais Saúde na Mesa</h4>
+          <p>São ricas em vitaminas, ferro, cálcio, fibras e proteínas. Ajudam a variar a alimentação da família sem gastar mais.</p>
+        </div>
+        <div class="mini-card">
+          <h4>💰 Renda Extra</h4>
+          <p>Podem ser vendidas frescas na feira ou transformadas em geleias, farinhas e pães caseiros com mais valor.</p>
+        </div>
+      </div>
+
+      <h3>🗺️ O Nosso Bioma: Encontro do Cerrado com a Caatinga</h3>
+      <p>Os municípios de <strong>Floriano, Tanque do Piauí, Nazaré do Piauí e Guadalupe</strong> (no Território Vales dos Rios Piauí e Itaueira) ficam em uma área muito especial chamada de <strong>ecótono</strong> — o encontro entre o <strong>Cerrado</strong> e a <strong>Caatinga</strong>.</p>
+
+      <div class="terra-box">
+        <strong>☀️ Por que isso é uma vantagem para a horta?</strong>
+        <ul>
+          <li>Nosso clima tem sol forte e períodos secos.</li>
+          <li>As PANCs da nossa região já estão acostumadas com esse calor e essa terra.</li>
+          <li>Elas crescem com <strong>pouca água</strong>, resistem melhor às pragas e <strong>não precisam de veneno (agrotóxico)</strong>.</li>
+        </ul>
+      </div>
+
+      <p>Ao cuidar e usar essas plantas, nosso trabalho ajuda a proteger a natureza, valorizar o saber dos mais antigos e contribuir com metas mundiais de sustentabilidade (<strong>ODS 2, 4, 12, 13, 15 e 17 da ONU</strong>).</p>
+    </section>
+
+    <!-- PÁGINA 3: FICHA CHANANA -->
+    <section class="page" data-title="Ficha: Chanana">
+      <h2>🌼 1. Chanana (Flor-do-guarujá)</h2>
+      <p><em>Nome científico: Turnera subulata / Turnera ulmifolia</em></p>
+
+      <figure class="photo-figure">
+        <img src="imagens/chanana.jpg" alt="Foto de campo da flor de Chanana amarela clara com miolo escuro e folhas verdes serrilhadas" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="img-fallback">📷 Espaço da foto de campo: salve a foto da Chanana como <code>imagens/chanana.jpg</code></div>
+        <figcaption>Registro de campo do Programa de Extensão UESPI: Chanana em flor na horta comunitária.</figcaption>
+      </figure>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>👀 Como reconhecer na horta</h4>
+          <ul>
+            <li><strong>Flor:</strong> Tem 5 pétalas amarelo-claro (quase creme) com o <strong>miolo bem escuro</strong> (marrom ou roxo).</li>
+            <li><strong>Horário:</strong> Abre pela manhã com o sol e fecha perto do meio-dia.</li>
+            <li><strong>Folhas:</strong> Verdes, com nervuras bem marcadas e bordinhas recortadas (parecendo uma serrinha).</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>💚 Para que serve e nutrientes</h4>
+          <ul>
+            <li>A <strong>flor é comestível</strong> e tem sabor suave e levemente adocicado.</li>
+            <li>Possui substâncias antioxidantes que protegem o corpo.</li>
+            <li>Atrai abelhas e polinizadores, ajudando toda a horta a produzir melhor.</li>
+            <li><strong>Uso principal aqui:</strong> Geleia artesanal de flor de chanana.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="safety-box">
+        <h3>⚠️ Boas Práticas de Segurança Alimentar</h3>
+        <ul>
+          <li>Só colha plantas que você tem <strong>100% de certeza</strong> da identificação.</li>
+          <li><strong>Não colha</strong> na beira de estradas movimentadas, perto de esgoto ou onde passam animais domésticos.</li>
+          <li>Lave bem as flores e folhas em água corrente limpa antes do preparo.</li>
+          <li>Use apenas as partes indicadas nas receitas (na chanana, use as <strong>pétalas/flores limpas</strong>).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PÁGINA 4: FICHA ORA-PRO-NÓBIS -->
+    <section class="page" data-title="Ficha: Ora-pro-nóbis">
+      <h2>🌺 2. Ora-pro-nóbis</h2>
+      <p><em>Nome científico: Pereskia spp. (registro em campo: variedade de flor vermelho-alaranjada, Pereskia bleo)</em></p>
+
+      <figure class="photo-figure">
+        <img src="imagens/orapronobis.jpg" alt="Foto de campo da Ora-pro-nóbis com flor vermelho-alaranjada no centro e folhas verdes grandes e carnosas" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="img-fallback">📷 Espaço da foto de campo: salve a foto da Ora-pro-nóbis como <code>imagens/orapronobis.jpg</code></div>
+        <figcaption>Registro de campo do Programa de Extensão UESPI: Ora-pro-nóbis com flor vermelho-alaranjada e folhas viçosas.</figcaption>
+      </figure>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>👀 Como reconhecer na horta</h4>
+          <ul>
+            <li><strong>Folhas:</strong> Grandes, verdes, brilhantes, grossinhas (carnosas) e levemente onduladas.</li>
+            <li><strong>Flor:</strong> Nesta variedade encontrada em campo, a flor é bem chamativa, de cor <strong>vermelho-alaranjada</strong>.</li>
+            <li><strong>Caule:</strong> Possui espinhos nos ramos — tenha cuidado ao colher!</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>💚 Para que serve e nutrientes</h4>
+          <ul>
+            <li>Conhecida como "carne vegetal": é muito rica em <strong>proteínas, ferro, cálcio e fibras</strong>.</li>
+            <li>Ajuda a combater a anemia e melhora o funcionamento do intestino.</li>
+            <li><strong>Usos principais aqui:</strong> Farinha proteica, pão caseiro e frango ao molho.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="safety-box">
+        <h3>⚠️ Boas Práticas de Segurança Alimentar</h3>
+        <ul>
+          <li>Cuidado com os <strong>espinhos do caule</strong> na hora da colheita: use tesoura ou luva se puder.</li>
+          <li>Lave folha por folha em água corrente e deixe de molho por 15 minutos em água com água sanitária própria para alimentos (1 colher de sopa para 1 litro de água), enxaguando bem depois.</li>
+          <li>Prefira consumir as folhas <strong>refogadas, cozidas ou secas em farinha</strong> para aproveitar melhor os nutrientes.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PÁGINA 5: FICHA VINAGREIRA -->
+    <section class="page" data-title="Ficha: Vinagreira">
+      <h2>🍃 3. Vinagreira (Azedinha / Cuxá)</h2>
+      <p><em>Nome científico: Hibiscus sabdariffa</em></p>
+
+      <figure class="photo-figure">
+        <img src="imagens/vinagreira.jpg" alt="Foto de campo da Vinagreira na horta com folhas verdes recortadas em pontas e talos levemente avermelhados" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="img-fallback">📷 Espaço da foto de campo: salve a foto da Vinagreira como <code>imagens/vinagreira.jpg</code></div>
+        <figcaption>Registro de campo do Programa de Extensão UESPI: pé de Vinagreira crescendo na horta comunitária.</figcaption>
+      </figure>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>👀 Como reconhecer na horta</h4>
+          <ul>
+            <li><strong>Folhas:</strong> Verdes, com formato recortado em pontas (lembrando uma mão aberta) e bordas serrilhadas.</li>
+            <li><strong>Talos:</strong> Os cabinhos das folhas costumam ter uma cor levemente <strong>avermelhada ou arroxeada</strong>.</li>
+            <li><strong>Sabor:</strong> Azedinho muito agradável, bem tradicional na cozinha nordestina.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>💚 Para que serve e nutrientes</h4>
+          <ul>
+            <li>Muito rica em <strong>Vitamina C, ferro, cálcio e fibras</strong>.</li>
+            <li>Ajuda a fortalecer a imunidade e facilita a absorção de ferro nas refeições.</li>
+            <li>Planta muito resistente ao calor do Piauí.</li>
+            <li><strong>Uso principal aqui:</strong> Arroz de cuxá (cuchá).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="safety-box">
+        <h3>⚠️ Boas Práticas de Segurança Alimentar</h3>
+        <ul>
+          <li>Escolha folhas verdes, firmes e sem manchas de fungos ou bichinhos.</li>
+          <li>Higienize bem em água corrente e solução clorada (1 colher de sopa de água sanitária própria para alimentos em 1 litro de água por 15 minutos) e enxágue.</li>
+          <li>Retire os talos mais duros antes de picar e cozinhar.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PÁGINA 6: RECEITAS PARTE 1 -->
+    <section class="page" data-title="Receitas Parte 1: Chanana e Vinagreira">
+      <h2>🍳 Caderno de Receitas Fáceis (Parte 1)</h2>
+      <p>Receitas simples, econômicas e deliciosas para comer em casa ou vender na feira.</p>
+
+      <!-- Receita 1 -->
+      <article class="recipe-card">
+        <div class="recipe-header">
+          <h3>🌼 Geleia Artesanal de Flor de Chanana</h3>
+          <span class="recipe-tag">Rende ~2 potes pequenos (150g)</span>
+        </div>
+        <p><strong>Ingredientes:</strong></p>
+        <ul>
+          <li>2 xícaras (chá) de <strong>flores de chanana</strong> limpas (colhidas pela manhã)</li>
+          <li>2 maçãs médias picadas sem sementes (dá ponto firme natural)</li>
+          <li>1 xícara (chá) de açúcar (cristal ou demerara)</li>
+          <li>1 xícara (chá) de água limpa</li>
+          <li>Suco de meio limão</li>
+        </ul>
+        <p><strong>Modo de fazer:</strong></p>
+        <ol>
+          <li>Lave delicadamente as flores de chanana em água corrente e escorra.</li>
+          <li>Em uma panela, coloque as maçãs picadas, a água e o açúcar. Cozinhe em fogo médio por uns 15 minutos até a maçã amolecer bem.</li>
+          <li>Amasse as maçãs com um garfo (ou bata rapidamente) e acrescente o suco de limão e as flores de chanana.</li>
+          <li>Mexa em fogo baixo por mais 10 a 15 minutos, até engrossar e começar a soltar do fundo da panela.</li>
+          <li>Coloque ainda quente em potes de vidro bem lavados e fervidos. Guarde na geladeira.</li>
+        </ol>
+      </article>
+
+      <!-- Receita 2 -->
+      <article class="recipe-card">
+        <div class="recipe-header">
+          <h3>🍃 Arroz de Cuxá (Vinagreira)</h3>
+          <span class="recipe-tag">Serve 4 a 5 pessoas</span>
+        </div>
+        <p><strong>Ingredientes:</strong></p>
+        <ul>
+          <li>1 maço grande de <strong>folhas de vinagreira</strong> bem lavadas</li>
+          <li>2 xícaras (chá) de arroz branco lavado</li>
+          <li>4 colheres (sopa) de gergelim torrado (opcional, mas dá o sabor tradicional)</li>
+          <li>1 cebola picada e 2 dentes de alho amassados</li>
+          <li>Cheiro-verde a gosto, 2 colheres (sopa) de óleo ou azeite e sal a gosto</li>
+          <li>4 xícaras (chá) de água quente</li>
+        </ul>
+        <p><strong>Modo de fazer:</strong></p>
+        <ol>
+          <li>Retire os talos grossos da vinagreira. Cozinhe as folhas em água fervendo por 5 minutos, escorra e pique bem miudinho (ou bata no pilão com o gergelim).</li>
+          <li>Em outra panela, aqueça o óleo e refogue a cebola e o alho.</li>
+          <li>Junte o arroz, refogue bem e adicione o sal e a água quente. Cozinhe até quase secar.</li>
+          <li>Quando o arroz estiver quase pronto, misture a pasta de vinagreira com o cheiro-verde.</li>
+          <li>Tampe a panela em fogo bem baixinho por 5 minutos e sirva quentinho!</li>
+        </ol>
+      </article>
+    </section>
+
+    <!-- PÁGINA 7: RECEITAS PARTE 2 -->
+    <section class="page" data-title="Receitas Parte 2: Ora-pro-nóbis">
+      <h2>🍲 Caderno de Receitas Fáceis (Parte 2)</h2>
+      <p>Veja três jeitos práticos de aproveitar toda a proteína da <strong>Ora-pro-nóbis</strong>.</p>
+
+      <!-- Receita 3 -->
+      <article class="recipe-card">
+        <div class="recipe-header">
+          <h3>🌿 Farinha Proteica de Ora-pro-nóbis</h3>
+          <span class="recipe-tag">Rende ~100g de farinha</span>
+        </div>
+        <p><strong>Ingredientes:</strong></p>
+        <ul>
+          <li>Cerca de 500g de <strong>folhas frescas de ora-pro-nóbis</strong> (bem lavadas e secas com pano limpo)</li>
+        </ul>
+        <p><strong>Modo de fazer:</strong></p>
+        <ol>
+          <li>Espalhe as folhas em uma assadeira limpa, sem empilhar demais.</li>
+          <li>Leve ao <strong>forno bem baixinho</strong> (com a porta entreaberta) por cerca de 40 a 60 minutos, virando de vez em quando, até as folhas ficarem bem sequinhas e quebradiças na mão (sem queimar!). <em>Dica: também pode secar na sombra em local bem ventilado e limpo por alguns dias.</em></li>
+          <li>Bata as folhas secas no liquidificador seco até virar um pó verde fino.</li>
+          <li>Peneire e guarde em pote de vidro limpo, bem fechado, longe da luz. Use 1 colher no feijão, cuscuz, sucos ou pães!</li>
+        </ol>
+      </article>
+
+      <!-- Receita 4 -->
+      <article class="recipe-card">
+        <div class="recipe-header">
+          <h3>🍞 Pão Caseiro com Ora-pro-nóbis</h3>
+          <span class="recipe-tag">Rende 1 pão grande (~500g)</span>
+        </div>
+        <p><strong>Ingredientes:</strong></p>
+        <ul>
+          <li>3 xícaras (chá) de farinha de trigo</li>
+          <li>3 colheres (sopa) de <strong>farinha de ora-pro-nóbis</strong> (ou 1 xícara de folhas batidas com a água)</li>
+          <li>1 xícara (chá) de água morna</li>
+          <li>1 envelope (10g) de fermento biológico seco para pão</li>
+          <li>2 colheres (sopa) de óleo e 1 colher (sopa) de açúcar</li>
+          <li>1 colher (chá) de sal</li>
+        </ul>
+        <p><strong>Modo de fazer:</strong></p>
+        <ol>
+          <li>Misture a água morna, o açúcar e o fermento. Deixe descansar 5 minutos.</li>
+          <li>Junte o óleo, o sal, a farinha de ora-pro-nóbis e vá colocando a farinha de trigo aos poucos.</li>
+          <li>Sove a massa na mesa limpa por 8 a 10 minutos até ficar lisinha e macia.</li>
+          <li>Cubra com pano limpo e deixe crescer por 40 minutos (até dobrar de tamanho).</li>
+          <li>Modele o pão, coloque em forma untada e asse em forno médio (180 °C) por cerca de 35 minutos.</li>
+        </ol>
+      </article>
+
+      <!-- Receita 5 -->
+      <article class="recipe-card">
+        <div class="recipe-header">
+          <h3>🍗 Frango ao Molho com Ora-pro-nóbis</h3>
+          <span class="recipe-tag">Serve 5 a 6 pessoas</span>
+        </div>
+        <p><strong>Ingredientes:</strong></p>
+        <ul>
+          <li>1 kg de frango em pedaços (caipira ou de granja)</li>
+          <li>2 xícaras (chá) de <strong>folhas de ora-pro-nóbis</strong> limpas e rasgadas grosseiramente</li>
+          <li>1 cebola picada, 3 dentes de alho, 2 tomates maduros picados</li>
+          <li>Colorau (corante), pimenta-do-reino, cheiro-verde, óleo e sal a gosto</li>
+          <li>2 xícaras (chá) de água quente</li>
+        </ul>
+        <p><strong>Modo de fazer:</strong></p>
+        <ol>
+          <li>Tempere o frango com alho, sal e pimenta. Doure os pedaços na panela com um fio de óleo.</li>
+          <li>Acrescente a cebola, o colorau e o tomate. Refogue bem até formar um molho cheiroso.</li>
+          <li>Coloque a água quente, tampe a panela e cozinhe por 20 a 25 minutos até o frango ficar macio.</li>
+          <li><strong>Nos últimos 5 minutos</strong>, junte as folhas de ora-pro-nóbis e o cheiro-verde. Mexa suavemente até murcharem e desligue o fogo. Fica com um caldo encorpado e super nutritivo!</li>
+        </ol>
+      </article>
+    </section>
+
+    <!-- PÁGINA 8: VÍDEO EDUCATIVO NO YOUTUBE -->
+    <section class="page" data-title="Vídeo Educativo no YouTube">
+      <h2>🎬 Vídeo Educativo do Projeto</h2>
+      <p>Preparamos um vídeo especial resumindo a nossa pesquisa sobre as PANCs nas hortas comunitárias de Floriano, Tanque do Piauí, Nazaré do Piauí e Guadalupe.</p>
+
+      <div class="video-card">
+        <div class="video-icon">▶️</div>
+        <h3 style="margin-top:0; color:#8f1d19;">Assista ao nosso vídeo no YouTube</h3>
+        <p>O vídeo abre direto no aplicativo ou site do YouTube para <strong>economizar sua internet rural</strong> e ajustar a imagem automaticamente para o seu celular.</p>
+
+        <!-- ========================================================== -->
+        <!-- PROFESSOR: SUBSTITUA O LINK ABAIXO PELO LINK DO SEU VÍDEO  -->
+        <!-- ========================================================== -->
+        <a
+          href="https://www.youtube.com/watch?v=COLOQUE_SEU_LINK_AQUI"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="yt-btn"
+        >
+          ▶ Assistir ao Vídeo no YouTube
+        </a>
+      </div>
+
+      <div class="info-box">
+        <strong>📌 O que você vai ver no vídeo:</strong>
+        <ul>
+          <li>Por que as PANCs são tesouros escondidos nas hortas do Piauí;</li>
+          <li>Como reconhecer a Chanana, a Ora-pro-nóbis e a Vinagreira;</li>
+          <li>Ideias simples para transformar essas plantas em comida saudável e renda extra.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PÁGINA 9: QUIZ INTERATIVO -->
+    <section class="page" data-title="Quiz de Identificação">
+      <h2>🎯 Quiz: Você já reconhece nossas PANCs?</h2>
+      <p>Toque na resposta que você acha certa. É só para aprender brincando!</p>
+
+      <div id="quizContainer"></div>
+
+      <div class="quiz-score-box" id="quizScoreBox">
+        Responda as perguntas acima para ver sua pontuação!
+      </div>
+
+      <p style="margin-top:0.8rem; text-align:center;" class="no-print">
+        <button type="button" class="tool-btn" style="border-color:var(--verde-medio);" onclick="resetQuiz()">
+          🔄 Tentar novamente
+        </button>
+      </p>
+    </section>
+
+    <!-- PÁGINA 10: CENTRAL DE CALCULADORAS -->
+    <section class="page" data-title="Calculadoras: Receitas e Preço de Venda">
+      <h2>🧮 Central de Calculadoras do Produtor</h2>
+      <p>Use estas duas ferramentas simples para planejar suas receitas e calcular por quanto vender seus produtos na feira.</p>
+
+      <div class="calc-tabs no-print">
+        <button type="button" class="calc-tab-btn active" id="tabBtnRecipe" onclick="switchCalcTab('recipe')">
+          🥣 1. Calculadora de Receitas
+        </button>
+        <button type="button" class="calc-tab-btn" id="tabBtnPrice" onclick="switchCalcTab('price')">
+          💰 2. Custo e Preço de Venda
+        </button>
+      </div>
+
+      <!-- CALCULADORA 1: RECEITAS -->
+      <div class="calc-panel active" id="panelRecipe">
+        <h3 style="margin-top:0;">🥣 Ajuste as medidas da receita</h3>
+        <p>Escolha a receita e diga quantas receitas (ou porções) você quer fazer hoje:</p>
+
+        <div class="form-group">
+          <label for="recipeSelect">Escolha a receita:</label>
+          <select id="recipeSelect" onchange="calculateRecipe()">
+            <option value="geleia">🌼 Geleia de Flor de Chanana (base: 2 potes)</option>
+            <option value="cuxa">🍃 Arroz de Cuxá / Vinagreira (base: 4 porções)</option>
+            <option value="farinha">🌿 Farinha de Ora-pro-nóbis (base: 100g de farinha)</option>
+            <option value="pao">🍞 Pão Caseiro de Ora-pro-nóbis (base: 1 pão grande)</option>
+            <option value="frango">🍗 Frango ao Molho com Ora-pro-nóbis (base: 1 kg de frango)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="recipeMultiplier">Multiplicar a receita por quantas vezes? (Ex.: 1 = normal, 2 = dobro, 0.5 = metade)</label>
+          <input type="number" id="recipeMultiplier" value="1" min="0.5" max="20" step="0.5" oninput="calculateRecipe()">
+        </div>
+
+        <div class="calc-result" id="recipeOutput"></div>
+      </div>
+
+      <!-- CALCULADORA 2: CUSTO E PREÇO DE VENDA -->
+      <div class="calc-panel" id="panelPrice">
+        <h3 style="margin-top:0;">💰 Calcule seu Custo e Preço de Venda</h3>
+        <p>Descubra quanto você gastou em cada unidade e por quanto pode vender para ter lucro justo.</p>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="costIngredients">Gasto com ingredientes (R$):</label>
+            <input type="number" id="costIngredients" value="12" min="0" step="0.5" oninput="calculatePrice()">
+          </div>
+          <div class="form-group">
+            <label for="costExtras">Gasto com potes, gás e etiquetas (R$):</label>
+            <input type="number" id="costExtras" value="8" min="0" step="0.5" oninput="calculatePrice()">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="unitsProduced">Quantos potes, pães ou pacotes renderam?</label>
+            <input type="number" id="unitsProduced" value="2" min="1" step="1" oninput="calculatePrice()">
+          </div>
+          <div class="form-group">
+            <label for="profitMargin">Quanto quer ganhar pelo seu trabalho?</label>
+            <select id="profitMargin" onchange="calculatePrice()">
+              <option value="50">50% de lucro (preço bem acessível)</option>
+              <option value="80" selected>80% de lucro (equilibrado)</option>
+              <option value="100">100% de lucro (dobro do custo)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-result" id="priceOutput"></div>
+
+        <h3>📊 Preços Médios de Referência no Mercado (Produtos Artesanais)</h3>
+        <p style="font-size:0.9rem;">Valores médios praticados em feiras agroecológicas e vendas artesanais no Brasil (use apenas como guia para a sua cidade):</p>
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Produto com PANC</th>
+              <th>Medida comum</th>
+              <th>Faixa média de venda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🌼 Geleia artesanal de flor de chanana</td>
+              <td>Pote de 150g a 200g</td>
+              <td><strong>R$ 18,00 a R$ 30,00</strong></td>
+            </tr>
+            <tr>
+              <td>🌿 Farinha proteica de ora-pro-nóbis</td>
+              <td>Pacote de 100g</td>
+              <td><strong>R$ 15,00 a R$ 28,00</strong></td>
+            </tr>
+            <tr>
+              <td>🍞 Pão caseiro com ora-pro-nóbis</td>
+              <td>Unidade (~450g a 500g)</td>
+              <td><strong>R$ 14,00 a R$ 25,00</strong></td>
+            </tr>
+            <tr>
+              <td>🍃 Maço de vinagreira / folhas frescas</td>
+              <td>Maço na feira local</td>
+              <td><strong>R$ 4,00 a R$ 8,00</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PÁGINA 11: GLOSSÁRIO E CRÉDITOS -->
+    <section class="page" data-title="Glossário e Créditos">
+      <h2>📖 Glossário: Entenda as Palavras Difíceis</h2>
+      <p>Explicação simples dos principais termos usados no nosso projeto de extensão:</p>
+
+      <div class="glossary-item">
+        <div class="glossary-term">🌱 PANC (Planta Alimentícia Não Convencional)</div>
+        <div>Planta que pode ser comida e faz bem à saúde, mas que não é vendida com frequência nos mercados comuns.</div>
+      </div>
+
+      <div class="glossary-item">
+        <div class="glossary-term">🌿 Agroecologia</div>
+        <div>Jeito de plantar respeitando a natureza, sem usar venenos (agrotóxicos), cuidando da terra, da água e da saúde de quem planta e de quem come.</div>
+      </div>
+
+      <div class="glossary-item">
+        <div class="glossary-term">🗺️ Ecótono</div>
+        <div>Área onde dois ambientes naturais diferentes se encontram. Em Floriano, Tanque do Piauí, Nazaré do Piauí e Guadalupe, é o encontro do Cerrado com a Caatinga.</div>
+      </div>
+
+      <div class="glossary-item">
+        <div class="glossary-term">🍽️ Segurança Alimentar</div>
+        <div>Garantir que toda família tenha comida de verdade, saudável, limpa e em quantidade suficiente todos os dias.</div>
+      </div>
+
+      <div class="glossary-item">
+        <div class="glossary-term">🏺 Beneficiamento</div>
+        <div>Transformar a planta colhida em um produto novo — como transformar a flor de chanana em geleia, ou a folha de ora-pro-nóbis em farinha e pão. Isso aumenta o tempo de duração e o valor de venda.</div>
+      </div>
+
+      <div class="glossary-item">
+        <div class="glossary-term">🤝 Renda Familiar e Economia Solidária</div>
+        <div>Quando as famílias e hortas comunitárias trabalham juntas para vender seus produtos na própria região, fortalecendo a comunidade.</div>
+      </div>
+
+      <div class="credits-box" style="margin-top:1.5rem;">
+        <h3 style="margin-top:0; color:var(--verde-escuro);">🏛️ Créditos do Programa de Extensão</h3>
+        <p style="margin-bottom:0.4rem;"><strong>Título:</strong> Plantas Alimentícias Não Convencionais (PANCs): Saberes Tradicionais, Sustentabilidade e Inovação na Agricultura Familiar.</p>
+        <p style="margin-bottom:0.4rem;"><strong>Instituição:</strong> Universidade Estadual do Piauí (UESPI) — Pró-Reitoria de Extensão, Assuntos Estudantis e Comunitários (PREX) — Campus Dra. Josefina Demes.</p>
+        <p style="margin-bottom:0.4rem;"><strong>Coordenação Geral:</strong> Prof. Dr. Daniel César Menêses de Carvalho.</p>
+        <p style="margin-bottom:0.4rem;"><strong>Colaboração:</strong> Leydiane Gleici Oliveira Medeiros.</p>
+        <p style="margin-bottom:0;"><strong>Território atendido:</strong> Hortas comunitárias e agricultores familiares de Floriano, Tanque do Piauí, Nazaré do Piauí e Guadalupe (PI).</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Botões grandes de passar página -->
+  <footer class="pager-controls" role="navigation" aria-label="Passar páginas">
+    <button type="button" class="pager-btn prev" id="btnPrev" onclick="changePage(-1)">
+      ⬅️ Voltar
+    </button>
+    <button type="button" class="pager-btn next" id="btnNext" onclick="changePage(1)">
+      Próxima ➡️
+    </button>
+  </footer>
+
+  <script>
+    // ============== NAVEGAÇÃO DE PÁGINAS ==============
+    const pages = document.querySelectorAll('.page');
+    let currentPage = 0;
+
+    function showPage(index) {
+      stopSpeech();
+      if (index < 0) index = 0;
+      if (index >= pages.length) index = pages.length - 1;
+      currentPage = index;
+
+      pages.forEach((p, i) => {
+        p.classList.toggle('active', i === currentPage);
+      });
+
+      document.getElementById('pageIndicator').textContent =
+        `Página ${currentPage + 1} de ${pages.length}`;
+      const percent = ((currentPage + 1) / pages.length) * 100;
+      document.getElementById('progressFill').style.width = percent + '%';
+      document.getElementById('quickMenu').value = currentPage;
+
+      document.getElementById('btnPrev').disabled = currentPage === 0;
+      document.getElementById('btnNext').disabled = currentPage === pages.length - 1;
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changePage(step) {
+      showPage(currentPage + step);
+    }
+
+    function goToPage(index) {
+      showPage(index);
+    }
+
+    // ============== TAMANHO DA FONTE (A+ / A-) ==============
+    let currentFontSize = 18;
+    function changeFontSize(delta) {
+      currentFontSize = Math.min(26, Math.max(14, currentFontSize + delta));
+      document.documentElement.style.setProperty('--base-font', currentFontSize + 'px');
+    }
+
+    // ============== OUVIR PÁGINA (WEB SPEECH API) ==============
+    let isSpeaking = false;
+
+    function stopSpeech() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      isSpeaking = false;
+      const btn = document.getElementById('btnSpeech');
+      if (btn) {
+        btn.classList.remove('active-speech');
+        btn.textContent = '🔊 Ouvir página';
+      }
+    }
+
+    function toggleSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert('Seu navegador não suporta leitura em voz alta. Tente abrir pelo Google Chrome.');
+        return;
+      }
+
+      if (isSpeaking) {
+        stopSpeech();
+        return;
+      }
+
+      const activePage = pages[currentPage];
+      const textToRead = activePage.innerText.replace(/\s+/g, ' ').trim();
+
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = 'pt-BR';
+      utterance.rate = 0.95;
+
+      utterance.onend = () => stopSpeech();
+      utterance.onerror = () => stopSpeech();
+
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+
+      isSpeaking = true;
+      const btn = document.getElementById('btnSpeech');
+      btn.classList.add('active-speech');
+      btn.textContent = '⏹️ Parar áudio';
+    }
+
+    // ============== COMPARTILHAR NO WHATSAPP ==============
+    function shareWhatsApp() {
+      const msg =
+        '🌱 Conheça a Cartilha Digital de PANCs (Chanana, Ora-pro-nóbis e Vinagreira) da UESPI! Receitas fáceis, identificação e calculadoras para a agricultura familiar: ' +
+        window.location.href;
+      window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    // ============== QUIZ INTERATIVO ==============
+    const quizData = [
+      {
+        q: '1. Qual planta tem flor amarelo-claro com o miolo escuro e abre pela manhã?',
+        options: ['Vinagreira', 'Chanana (Flor-do-guarujá)', 'Ora-pro-nóbis'],
+        correct: 1,
+        explanation: 'Acertou! A Chanana tem 5 pétalas amarelo-claro com o miolo bem escuro e fica ótima em geleia.'
+      },
+      {
+        q: '2. Qual dessas PANCs é famosa por ser rica em proteínas ("carne vegetal") e vira farinha e pão?',
+        options: ['Ora-pro-nóbis', 'Chanana', 'Capim-santo'],
+        correct: 0,
+        explanation: 'Isso mesmo! A Ora-pro-nóbis tem muita proteína, ferro e fibras, sendo excelente no frango ao molho, na farinha e no pão.'
+      },
+      {
+        q: '3. Qual planta tem folhas recortadas, sabor azedinho e é usada no famoso Arroz de Cuxá?',
+        options: ['Chanana', 'Ora-pro-nóbis', 'Vinagreira'],
+        correct: 2,
+        explanation: 'Muito bem! A Vinagreira dá o sabor azedinho delicioso do Arroz de Cuxá e é rica em vitamina C.'
+      },
+      {
+        q: '4. Sobre segurança alimentar nas PANCs, o que devemos fazer SEMPRE?',
+        options: [
+          'Comer qualquer mato desconhecido sem lavar',
+          'Só consumir plantas identificadas com certeza e bem higienizadas',
+          'Colher plantas na beira de esgoto'
+        ],
+        correct: 1,
+        explanation: 'Exatamente! A regra de ouro é só consumir com 100% de certeza da identificação e sempre higienizar bem.'
+      },
+      {
+        q: '5. Os municípios de Floriano, Tanque do Piauí, Nazaré do Piauí e Guadalupe ficam no encontro de quais biomas?',
+        options: ['Amazônia e Pantanal', 'Cerrado e Caatinga', 'Pampa e Mata Atlântica'],
+        correct: 1,
+        explanation: 'Perfeito! Nossa região é um ecótono (encontro) entre o Cerrado e a Caatinga.'
+      }
+    ];
+
+    let quizAnswers = new Array(quizData.length).fill(null);
+
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      quizData.forEach((item, qIdx) => {
+        const div = document.createElement('div');
+        div.className = 'quiz-item';
+        div.innerHTML = `<div class="quiz-question">${item.q}</div>`;
+
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'quiz-options';
+
+        item.options.forEach((opt, oIdx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'quiz-btn';
+          btn.textContent = opt;
+          btn.onclick = () => answerQuiz(qIdx, oIdx);
+          if (quizAnswers[qIdx] !== null) {
+            btn.disabled = true;
+            if (oIdx === item.correct) btn.classList.add('correct');
+            else if (oIdx === quizAnswers[qIdx]) btn.classList.add('wrong');
+          }
+          optsDiv.appendChild(btn);
+        });
+
+        div.appendChild(optsDiv);
+
+        if (quizAnswers[qIdx] !== null) {
+          const fb = document.createElement('div');
+          fb.className = 'quiz-feedback';
+          if (quizAnswers[qIdx] === item.correct) {
+            fb.style.color = '#155724';
+            fb.textContent = '✅ ' + item.explanation;
+          } else {
+            fb.style.color = '#721c24';
+            fb.textContent = '❌ Quase lá! ' + item.explanation;
+          }
+          div.appendChild(fb);
+        }
+
+        container.appendChild(div);
+      });
+
+      updateQuizScore();
+    }
+
+    function answerQuiz(qIdx, oIdx) {
+      quizAnswers[qIdx] = oIdx;
+      renderQuiz();
+    }
+
+    function updateQuizScore() {
+      const answered = quizAnswers.filter(a => a !== null).length;
+      const correct = quizAnswers.filter((a, i) => a === quizData[i].correct).length;
+      const box = document.getElementById('quizScoreBox');
+
+      if (answered === 0) {
+        box.textContent = 'Responda as perguntas acima para ver sua pontuação!';
+      } else if (answered < quizData.length) {
+        box.textContent = `Você respondeu ${answered} de ${quizData.length} perguntas (${correct} acertos até agora). Continue!`;
+      } else {
+        let msg = correct >= 4
+          ? '🎉 Parabéns! Você já domina o reconhecimento das nossas PANCs!'
+          : '🌱 Muito bom! Você pode revisar as fichas das plantas e tentar de novo quando quiser.';
+        box.textContent = `Resultado final: ${correct} de ${quizData.length} acertos. ${msg}`;
+      }
+    }
+
+    function resetQuiz() {
+      quizAnswers = new Array(quizData.length).fill(null);
+      renderQuiz();
+    }
+
+    // ============== CALCULADORAS ==============
+    function switchCalcTab(tab) {
+      document.getElementById('tabBtnRecipe').classList.toggle('active', tab === 'recipe');
+      document.getElementById('tabBtnPrice').classList.toggle('active', tab === 'price');
+      document.getElementById('panelRecipe').classList.toggle('active', tab === 'recipe');
+      document.getElementById('panelPrice').classList.toggle('active', tab === 'price');
+    }
+
+    const recipesDB = {
+      geleia: {
+        yieldLabel: 'potes pequenos (150g)',
+        baseYield: 2,
+        items: [
+          { name: 'Flores de chanana limpas', qty: 2, unit: 'xícara(s)' },
+          { name: 'Maçãs médias picadas', qty: 2, unit: 'unidade(s)' },
+          { name: 'Açúcar', qty: 1, unit: 'xícara(s)' },
+          { name: 'Água limpa', qty: 1, unit: 'xícara(s)' },
+          { name: 'Limão (suco)', qty: 0.5, unit: 'unidade(s)' }
+        ]
+      },
+      cuxa: {
+        yieldLabel: 'porções',
+        baseYield: 4,
+        items: [
+          { name: 'Folhas de vinagreira', qty: 1, unit: 'maço(s) grande(s)' },
+          { name: 'Arroz branco', qty: 2, unit: 'xícara(s)' },
+          { name: 'Gergelim torrado (opcional)', qty: 4, unit: 'colher(es) de sopa' },
+          { name: 'Cebola picada', qty: 1, unit: 'unidade(s)' },
+          { name: 'Alho amassado', qty: 2, unit: 'dente(s)' },
+          { name: 'Água quente', qty: 4, unit: 'xícara(s)' }
+        ]
+      },
+      farinha: {
+        yieldLabel: 'gramas de farinha pronta',
+        baseYield: 100,
+        items: [
+          { name: 'Folhas frescas de ora-pro-nóbis limpas', qty: 500, unit: 'gramas' }
+        ]
+      },
+      pao: {
+        yieldLabel: 'pão(es) grande(s) (~500g)',
+        baseYield: 1,
+        items: [
+          { name: 'Farinha de trigo', qty: 3, unit: 'xícara(s)' },
+          { name: 'Farinha de ora-pro-nóbis', qty: 3, unit: 'colher(es) de sopa' },
+          { name: 'Água morna', qty: 1, unit: 'xícara(s)' },
+          { name: 'Fermento biológico seco', qty: 10, unit: 'gramas (1 envelope)' },
+          { name: 'Óleo', qty: 2, unit: 'colher(es) de sopa' },
+          { name: 'Açúcar', qty: 1, unit: 'colher(es) de sopa' },
+          { name: 'Sal', qty: 1, unit: 'colher(es) de chá' }
+        ]
+      },
+      frango: {
+        yieldLabel: 'porções',
+        baseYield: 5,
+        items: [
+          { name: 'Frango em pedaços', qty: 1, unit: 'kg' },
+          { name: 'Folhas de ora-pro-nóbis limpas', qty: 2, unit: 'xícara(s)' },
+          { name: 'Tomates maduros picados', qty: 2, unit: 'unidade(s)' },
+          { name: 'Cebola picada', qty: 1, unit: 'unidade(s)' },
+          { name: 'Alho', qty: 3, unit: 'dente(s)' },
+          { name: 'Água quente', qty: 2, unit: 'xícara(s)' }
+        ]
+      }
+    };
+
+    function formatQty(num) {
+      return Number.isInteger(num) ? num : num.toFixed(1).replace('.', ',');
+    }
+
+    function calculateRecipe() {
+      const key = document.getElementById('recipeSelect').value;
+      let mult = parseFloat(document.getElementById('recipeMultiplier').value);
+      if (isNaN(mult) || mult <= 0) mult = 1;
+
+      const rec = recipesDB[key];
+      const totalYield = formatQty(rec.baseYield * mult);
+
+      let html = `<p><strong>📌 Rendimento estimado:</strong> ${totalYield} ${rec.yieldLabel}</p><ul>`;
+      rec.items.forEach(item => {
+        html += `<li><strong>${formatQty(item.qty * mult)} ${item.unit}</strong> de ${item.name}</li>`;
+      });
+      html += '</ul>';
+      document.getElementById('recipeOutput').innerHTML = html;
+    }
+
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function calculatePrice() {
+      const ing = Math.max(0, parseFloat(document.getElementById('costIngredients').value) || 0);
+      const ext = Math.max(0, parseFloat(document.getElementById('costExtras').value) || 0);
+      const units = Math.max(1, parseInt(document.getElementById('unitsProduced').value, 10) || 1);
+      const margin = parseFloat(document.getElementById('profitMargin').value) || 80;
+
+      const totalCost = ing + ext;
+      const unitCost = totalCost / units;
+      const suggestedPrice = unitCost * (1 + margin / 100);
+      const profitPerUnit = suggestedPrice - unitCost;
+      const totalProfit = profitPerUnit * units;
+
+      document.getElementById('priceOutput').innerHTML = `
+        <p><strong>💸 Custo total da receita:</strong> ${formatBRL(totalCost)}</p>
+        <p><strong>📦 Custo de cada unidade:</strong> ${formatBRL(unitCost)}</p>
+        <p style="font-size:1.12rem; color:var(--verde-escuro);"><strong>🏷️ Preço sugerido de venda (por unidade): ${formatBRL(suggestedPrice)}</strong></p>
+        <p><strong>✅ Lucro estimado:</strong> ${formatBRL(profitPerUnit)} por unidade (<strong>${formatBRL(totalProfit)}</strong> no total)</p>
+      `;
+    }
+
+    // Inicialização
+    showPage(0);
+    renderQuiz();
+    calculateRecipe();
+    calculatePrice();
+  </script>
+</body>
+</html>
